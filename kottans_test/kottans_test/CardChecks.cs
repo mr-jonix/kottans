@@ -4,8 +4,9 @@ using System.Text.RegularExpressions;
 public class CardChecker
 {
 
-    public string GetCreditCardVendor(string card)
+    public string GetCreditCardVendor(string card_input)
     {
+        string card = VerifyAndNormalizeInput(card_input); 
         //check American Express
         if (card.Length==15&&(card.StartsWith("34") || card.StartsWith("37")))
         {
@@ -37,8 +38,9 @@ public class CardChecker
         return "Unknown"; // temp
     }
 
-    public bool IsCreditCardNumberValid(string card)
+    public bool IsCreditCardNumberValid(string card_input)
     {
+        string card = VerifyAndNormalizeInput(card_input);
         int cardNumberLength = card.Length;
         int currentDigit;
         int sumLuhn = 0;
@@ -63,8 +65,9 @@ public class CardChecker
         return (sumLuhn%10 == 0); 
     }
 
-    public string GenerateNextCreditCardNumber(string card)
+    public string GenerateNextCreditCardNumber(string card_input)
     {
+        string card = VerifyAndNormalizeInput(card_input);
         string newCard = "";
         int IIN = int.Parse(card.Substring(0, 6));
         int PAN = int.Parse(card.Substring(6, card.Length - 7));
