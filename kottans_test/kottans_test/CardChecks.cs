@@ -6,7 +6,8 @@ public class CardChecker
 
     public string GetCreditCardVendor(string card_input)
     {
-        string card = VerifyAndNormalizeInput(card_input); 
+        string card = VerifyAndNormalizeInput(card_input);
+        if (!LuhnCheckPasses(card_input)) return "Unknown"; // return Unknown if card number is not valid
         //check American Express
         if (card.Length==15&&(card.StartsWith("34") || card.StartsWith("37")))
         {
@@ -38,7 +39,7 @@ public class CardChecker
         return "Unknown"; // temp
     }
 
-    public bool IsCreditCardNumberValid(string card_input)
+    public bool LuhnCheckPasses(string card_input)
     {
         string card = VerifyAndNormalizeInput(card_input);
         int cardNumberLength = card.Length;
@@ -62,7 +63,19 @@ public class CardChecker
             sumLuhn += currentDigit;
         }
 
-        return (sumLuhn%10 == 0); 
+        return (sumLuhn % 10 == 0);
+    }
+
+    public bool IsCreditCardNumberValid(string card_input)
+    {
+        if (GetCreditCardVendor(card_input) != "Unknown")
+        {
+            return LuhnCheckPasses(card_input);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public string GenerateNextCreditCardNumber(string card_input)
@@ -70,7 +83,7 @@ public class CardChecker
         string card = VerifyAndNormalizeInput(card_input);
         string newCard = "";
         int IIN = int.Parse(card.Substring(0, 6));
-        int PAN = int.Parse(card.Substring(6, card.Length - 7));
+        long PAN = long.Parse(card.Substring(6, card.Length - 7));
         if (IsCreditCardNumberValid(card))
         {
             PAN++;
